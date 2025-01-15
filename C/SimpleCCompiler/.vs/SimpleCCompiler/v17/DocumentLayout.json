@@ -3,27 +3,16 @@
   "WorkspaceRootPath": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|d:\\bat marko\\university\\fourth year 2024-2025\\\u043C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\project\\mtproject-demo-csharp\\c\\simpleccompiler\\emit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|solutionrelative:emit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|solutionrelative:parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|d:\\bat marko\\university\\fourth year 2024-2025\\\u043C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\project\\mtproject-demo-csharp\\c\\simpleccompiler\\emit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|solutionrelative:emit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\scanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|solutionrelative:scanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|d:\\bat marko\\university\\fourth year 2024-2025\\\u043C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\project\\mtproject-demo-csharp\\c\\simpleccompiler\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|d:\\bat marko\\university\\fourth year 2024-2025\\\u043C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\project\\mtproject-demo-csharp\\c\\simpleccompiler\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}|SimpleCCompiler.csproj|solutionrelative:properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EEDE3BBA-1814-4D66-9AEE-05EC86514803}|..\\SimpleCCompiler.Tests\\SimpleCCompiler.Tests.csproj|d:\\bat marko\\university\\fourth year 2024-2025\\\u043C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\project\\mtproject-demo-csharp\\c\\simpleccompiler.tests\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -33,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -77,52 +66,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T19:43:31.107Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Properties\\AssemblyInfo.cs",
-              "RelativeDocumentMoniker": "Properties\\AssemblyInfo.cs",
-              "ToolTip": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Properties\\AssemblyInfo.cs",
-              "RelativeToolTip": "Properties\\AssemblyInfo.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAQwB0AAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T19:42:57.756Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler.Tests\\Properties\\AssemblyInfo.cs",
-              "RelativeDocumentMoniker": "..\\SimpleCCompiler.Tests\\Properties\\AssemblyInfo.cs",
-              "ToolTip": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler.Tests\\Properties\\AssemblyInfo.cs",
-              "RelativeToolTip": "..\\SimpleCCompiler.Tests\\Properties\\AssemblyInfo.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAQwB0AAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T19:42:54.566Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Emit.cs",
               "DocumentMoniker": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Emit.cs",
               "RelativeDocumentMoniker": "Emit.cs",
               "ToolTip": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Emit.cs",
               "RelativeToolTip": "Emit.cs",
-              "ViewState": "AQIAAFQAAAAAAAAAAAAmwAMAAAAdAAAA",
+              "ViewState": "AQIAAKMAAAAAAAAAAAAawLIAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-13T19:01:57.947Z",
               "EditorCaption": ""
@@ -135,20 +85,20 @@
               "RelativeDocumentMoniker": "Scanner.cs",
               "ToolTip": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Scanner.cs",
               "RelativeToolTip": "Scanner.cs",
-              "ViewState": "AQIAAKwAAAAAAAAAAAAcwAIAAAAFAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-12T12:30:47.571Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Parser.cs",
               "DocumentMoniker": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Parser.cs",
               "RelativeDocumentMoniker": "Parser.cs",
               "ToolTip": "D:\\bat Marko\\University\\Fourth year 2024-2025\\\u041C\u0435\u0442\u043E\u0434\u0438 \u043D\u0430 \u0442\u0440\u0430\u043D\u0441\u043B\u0430\u0446\u0438\u044F\\Project\\mtproject-demo-csharp\\C\\SimpleCCompiler\\Parser.cs",
               "RelativeToolTip": "Parser.cs",
-              "ViewState": "AQIAAKcAAAAAAAAAAAAqwLcAAAAgAAAA",
+              "ViewState": "AQIAADQAAAAAAAAAAAAAAEgAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-12T12:30:34.18Z",
               "EditorCaption": ""
