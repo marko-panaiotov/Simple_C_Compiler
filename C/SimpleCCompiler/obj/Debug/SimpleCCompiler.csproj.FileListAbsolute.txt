@@ -1,0 +1,7 @@
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\bin\Debug\SimpleCCompiler.exe.config
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\bin\Debug\SimpleCCompiler.exe
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\bin\Debug\SimpleCCompiler.pdb
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\obj\Debug\SimpleCCompiler.csproj.AssemblyReference.cache
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\obj\Debug\SimpleCCompiler.csproj.CoreCompileInputs.cache
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\obj\Debug\SimpleCCompiler.exe
+D:\bat Marko\University\Fourth year 2024-2025\Методи на транслация\Project\mtproject-demo-csharp\C\SimpleCCompiler\obj\Debug\SimpleCCompiler.pdb
