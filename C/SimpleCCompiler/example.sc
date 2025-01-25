@@ -1,3 +1,7 @@
 ﻿A = scanf();
-B = scanf();
-printf(A*B+2);
+B = A*2;
+infinite{
+printf(B);
+{
+infinite
+printf(B);

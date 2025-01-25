@@ -1,3 +1,4 @@
+using SimpleCCompiler.TableSymbols;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,9 +26,16 @@ namespace SimpleCCompiler
 				Assembly.LoadWithPartialName(assemblyRef);
 				//Assembly.Load(assemblyRef);
 			}
-		}
-		
-		public override string ToString()
+            AddFunction(new IdentToken(0, 0, "Abs"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(0, 0, "value"), typeof(int), null) }, null);
+            AddFunction(new IdentToken(0, 0, "Sqr"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(0, 0, "value"), typeof(int), null) }, null);
+            AddFunction(new IdentToken(0, 0, "Odd"), typeof(bool), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(0, 0, "value"), typeof(int), null) }, null);
+            AddFunction(new IdentToken(0, 0, "Ord"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(0, 0, "value"), typeof(char), null) }, null);
+            AddFunction(new IdentToken(0, 0, "Scanf"), typeof(void), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(0, 0, "format"), typeof(string), null) }, null);
+            AddFunction(new IdentToken(0, 0, "Printf"), typeof(void), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(0, 0, "format"), typeof(string), null) }, null);
+
+        }
+
+        public override string ToString()
 		{
 			StringBuilder s = new StringBuilder();
 			int i = symbolTable.Count;
@@ -74,14 +82,39 @@ namespace SimpleCCompiler
 			symbolTable.Peek().Add(token.value, result);
 			return result;
 		}
-		
-		public MethodSymbol AddMethod(IdentToken token, Type type, FormalParamSymbol[] formalParams, MethodInfo methodInfo) {
+        public FunctionSymbol AddFunction(IdentToken token, Type type, List<FormalParamSymbol> formalParams, MethodInfo methodInfo)
+        {
+            FunctionSymbol result = new FunctionSymbol(token, type, formalParams, methodInfo);
+            symbolTable.Peek().Add(token.value, result);
+            return result;
+        }
+
+        public MethodSymbol AddMethod(IdentToken token, Type type, FormalParamSymbol[] formalParams, MethodInfo methodInfo) {
 			MethodSymbol result = new MethodSymbol(token, type, formalParams, methodInfo);
 			symbolTable.Peek().Add(token.value, result);
 			return result;
 		}
-		
-		public Dictionary<string, TableSymbol> BeginScope()
+        public Type ResolveBuiltInType(string typeName)
+        {
+            // Обработете вградените типове * и pchar
+            if (typeName == "*")
+            {
+                // Този код зависи от начина, по който искате да представите указателите във вашия език
+                // Например, можете да върнете typeof(object) за обозначаване на указателите
+                return typeof(IntPtr);
+            }
+            else if (typeName == "pchar")
+            {
+                // Тук също трябва да определите какъв тип да представлява "pchar"
+                return typeof(char);
+            }
+            else
+            {
+                // Ако не сте разпознали типа, върнете null или генерирайте грешка
+                return null;
+            }
+        }
+        public Dictionary<string, TableSymbol> BeginScope()
 		{
 			symbolTable.Push(new Dictionary<string, TableSymbol>());
 			return symbolTable.Peek();

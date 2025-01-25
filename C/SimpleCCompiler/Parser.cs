@@ -1,8 +1,10 @@
-﻿using System;
+﻿using SimpleCCompiler.TableSymbols;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 
 namespace SimpleCCompiler
 {
@@ -15,8 +17,9 @@ namespace SimpleCCompiler
 		private Table symbolTable;
 		private Token token;
 		private Diagnostics diag;
-		
-		private Stack<Label> breakStack = new Stack<Label>();
+        private static bool newScope;
+
+        private Stack<Label> breakStack = new Stack<Label>();
 		private Stack<Label> continueStack = new Stack<Label>();
 
         private const String program = "Program";
@@ -34,15 +37,27 @@ namespace SimpleCCompiler
 		public void AddPredefinedSymbols()
 		{
 			symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "int"), typeof(System.Int32)));
-            symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1, -1, "short"), typeof(System.Int16)));
-            symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1, -1, "long"), typeof(System.Int64)));
+            symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "short"), typeof(System.Int16)));
+            symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "long"), typeof(System.Int64)));
             symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "bool"), typeof(System.Boolean)));
 			symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "double"), typeof(System.Double)));
 			symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "char"), typeof(System.Char)));
 			symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1,-1, "string"), typeof(System.String)));
-		}
-		
-		public bool Parse()
+            
+            symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1, -1, "*"), typeof(IntPtr)));
+            symbolTable.AddToUniverse(new PrimitiveTypeSymbol(new IdentToken(-1, -1, "pchar"), typeof(char)));
+
+            symbolTable.AddToUniverse(new FunctionSymbol(new IdentToken(-1, -1, "abs"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(-1, -1, "value"), typeof(int), null) }, null));
+            symbolTable.AddToUniverse(new FunctionSymbol(new IdentToken(-1, -1, "sqr"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(-1, -1, "value"), typeof(int), null) }, null));
+            symbolTable.AddToUniverse(new FunctionSymbol(new IdentToken(-1, -1, "odd"), typeof(bool), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(-1, -1, "value"), typeof(int), null) }, null));
+            symbolTable.AddToUniverse(new FunctionSymbol(new IdentToken(-1, -1, "ord"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(-1, -1, "ch"), typeof(char), null) }, null));
+
+            symbolTable.AddToUniverse(new FunctionSymbol(new IdentToken(-1, -1, "scanf"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(-1, -1, "format"), typeof(string), null) }, null));
+            symbolTable.AddToUniverse(new FunctionSymbol(new IdentToken(-1, -1, "printf"), typeof(int), new List<FormalParamSymbol> { new FormalParamSymbol(new IdentToken(-1, -1, "format"), typeof(string), null) }, null));
+
+        }
+
+        public bool Parse()
 		{
 			ReadNextToken();
 			AddPredefinedSymbols();
@@ -90,10 +105,10 @@ namespace SimpleCCompiler
 		
 		public bool CheckDouble()
 		{
-			bool result = (token is DoubleToken);
-			if (result) ReadNextToken();
-			return result;
-		}
+            bool result = (token is DoubleToken);
+            if (result) ReadNextToken();
+            return result;
+        }
 		
 		public bool CheckBoolean()
 		{
@@ -172,7 +187,10 @@ namespace SimpleCCompiler
 			diag.Note(token.line, token.column, string.Format(message, par));
 		}
 
-        // [1] Program = {Statement}.
+
+        // [1]  Program = {Statement}.
+
+        // се използва за анализиране на конкретни части от програмния код като програмни блокове, оператори, изрази
         public bool IsProgram()
         {
             AddToUniverse();
@@ -225,6 +243,7 @@ namespace SimpleCCompiler
         //-----------------------------------------------------------------------------------------------------------------------------------
 
         // [2] Statement = [Expression] ';'
+        // [2]  Statement = CompoundSt | IfSt | WhileSt | StopSt | [Expression] ';'.
 
         // се използва за анализиране на конкретни части от програмния код като програмни блокове, оператори, изрази
         public bool IsStatement()
@@ -266,26 +285,6 @@ namespace SimpleCCompiler
             if (CheckEndOfFile())
                 return false;
             return true;
-
-            // задача - изпит 'skip' statement
-            if (CheckKeyword("skip"))
-            {
-                if (!IsStatement())
-                {
-                    Error("Expect statement!");
-                }
-
-                MethodInfo bestMethodInfo = typeof(Console).GetMethod("WriteLine", new Type[] { type });
-
-                if (bestMethodInfo != null)
-                {
-                    emit.AddMethodCall(bestMethodInfo);
-                }
-                else Error("Skip cannot be used!");
-
-                type = bestMethodInfo.ReturnType;
-                return true;
-            }
         }
 
         private void CheckExpression(LocationInfo location, Type type)
@@ -316,6 +315,187 @@ namespace SimpleCCompiler
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------
+
+        //[3]  CompoundSt = '{' {Declaration} {Statement} '}'
+        public bool IsCompound(bool newScope)
+        {
+            if (!CheckSpecialSymbol("{")) return false;
+
+            // Emit
+            if (newScope)
+            {
+                symbolTable.BeginScope();
+                emit.BeginScope();
+            }
+
+            while (IsVarDecl() || IsStatement()) ;
+
+            // Emit
+            if (newScope)
+            {
+                emit.EndScope();
+                symbolTable.EndScope();
+            }
+
+            if (!CheckSpecialSymbol("}")) Error("Очаквам специален символ '}'");
+
+            return true;
+        }
+
+        //[4]  Declaration = VarDef | FuncDef.
+        public bool IsVarDecl()
+        {
+            Type type;
+            IdentToken name;
+
+            if (!IsType(out type)) return false;
+            name = token as IdentToken;
+            if (!CheckIdent()) Error("Очаквам идентификатор");
+            if (!CheckSpecialSymbol(";")) Error("Очаквам специален символ ';'");
+
+            // Семантична грешка - редекларирана ли е локалната променлива повторно?
+            if (symbolTable.ExistCurrentScopeSymbol(name.value)) Error("Локалната променлива {0} е редекларирана", name, name.value);
+            // Emit
+            symbolTable.AddLocalVar(name, emit.AddLocalVar(name.value, type));
+
+            return true;
+        }
+
+        //[5]  VarDef = TypeIdent Ident.
+        public bool IsDecl()
+        {
+            while (IsVarDecl() || IsFieldDeclOrMethodDecl()) ;
+            return true;
+        }
+
+        public bool IsFieldDeclOrMethodDecl()
+        {
+            IdentToken name;
+            IdentToken paramName;
+            List<FormalParamSymbol> formalParams = new List<FormalParamSymbol>();
+            List<Type> formalParamTypes = new List<Type>();
+            Type paramType;
+            long arraySize = 0;
+            Type type;
+
+            if (!IsType(out type)) return false;
+            name = token as IdentToken;
+            if (!CheckIdent()) Error("Очаквам идентификатор");
+            if (CheckSpecialSymbol("["))
+            {
+                arraySize = ((NumberToken)token).value;
+                if (!CheckNumber()) Error("Очаквам цяло число");
+                if (!CheckSpecialSymbol("]")) Error("Очаквам специален символ ']'");
+
+                type = type.MakeArrayType();
+            }
+            else if (CheckSpecialSymbol("("))
+            {
+                // Семантична грешка - редеклариран ли е методът повторно?
+                if (symbolTable.ExistCurrentScopeSymbol(name.value)) Error("Метода {0} е редеклариран", name, name.value);
+                // Emit
+                MethodSymbol methodToken = symbolTable.AddMethod(name, type, formalParams.ToArray(), null);
+                symbolTable.BeginScope();
+
+                while (IsType(out paramType))
+                {
+                    paramName = token as IdentToken;
+                    if (!CheckIdent()) Error("Очаквам идентификатор");
+                    // Семантична грешка - редеклариран ли е формалният параметър повторно?
+                    if (symbolTable.ExistCurrentScopeSymbol(paramName.value)) Error("Формалния параметър {0} е редеклариран", paramName, paramName.value);
+                    FormalParamSymbol formalParam = symbolTable.AddFormalParam(paramName, paramType, null);
+                    formalParams.Add(formalParam);
+                    formalParamTypes.Add(paramType);
+                    if (!CheckSpecialSymbol(",")) break;
+                }
+                if (!CheckSpecialSymbol(")")) Error("Очаквам специален символ ')'");
+
+                methodToken.methodInfo = emit.AddMethod(name.value, type, formalParamTypes.ToArray());
+                for (int i = 0; i < formalParams.Count; i++)
+                {
+                    formalParams[i].parameterInfo = emit.AddParam(formalParams[i].value, i + 1, formalParamTypes[i]);
+                }
+                methodToken.formalParams = formalParams.ToArray();
+
+                if (!IsCompound(false)) Error("Очаквам блок");
+
+                symbolTable.EndScope();
+
+                return true;
+            }
+
+            if (!CheckSpecialSymbol(";")) Error("Очаквам специален символ ';'");
+
+            // Семантична грешка - редекларирано ли е полето повторно?
+            if (symbolTable.ExistCurrentScopeSymbol(name.value)) Error("Полето {0} е редекларирано", name, name.value);
+            if (type == typeof(void)) Error("Полето {0} не може да е от тип void", name, name.value);
+
+            // Emit (field)
+            symbolTable.AddField(name, emit.AddField(name.value, type, arraySize));
+
+            return true;
+        }
+
+        //  IsType = 'int' | 'bool' | 'double' | 'char' | 'string' |.
+        public bool IsType(out Type type)
+        {
+            if (CheckKeyword("int"))
+            {
+                type = typeof(System.Int32);
+                return true;
+            }
+            if (CheckKeyword("bool"))
+            {
+                type = typeof(System.Boolean);
+                return true;
+            }
+            if (CheckKeyword("double"))
+            {
+                type = typeof(System.Double);
+                return true;
+            }
+            if (CheckKeyword("char"))
+            {
+                type = typeof(System.Char);
+                return true;
+            }
+            if (CheckKeyword("string"))
+            {
+                type = typeof(System.String);
+                return true;
+            }
+            if (CheckSpecialSymbol("*"))
+            {
+                type = typeof(IntPtr);
+                return true;
+            }
+            if (CheckKeyword("pchar"))
+            {
+                type = typeof(char*);
+                return true;
+            }
+            IdentToken typeIdent = token as IdentToken;
+            if (typeIdent != null)
+            {
+                TypeSymbol ts = symbolTable.GetSymbol(typeIdent.value) as TypeSymbol;
+                if (ts != null)
+                    type = ts.type;
+                else
+                    type = symbolTable.ResolveExternalType(typeIdent.value);
+
+                if (type != null)
+                {
+                    ReadNextToken();
+                    return true;
+                }
+            }
+
+            type = null;
+            return false;
+        }
+
+        // [11] AdditiveExpr = ['+' | '-'] MultiplicativeExpr {('+' | '-' | '|' | '||' |) MultiplicativeExpr}.
+
 
         // [3] Expression = BitwiseAndExpression {'|' BitwiseAndExpression}.
 
@@ -493,7 +673,102 @@ namespace SimpleCCompiler
 
                 emit.AddUnaryOp(opToken.value);
             }
+            if (CheckKeyword("if"))
+            {
+                // 'if' '(' Expression ')' Statement ['else' Statement]
+                if (!CheckSpecialSymbol("(")) Error("Очаквам специален символ '('");
+                if (!IsExpression(null, out type)) Error("Очаквам израз");
+                if (!AssignableTypes(typeof(System.Boolean), type)) Error("Типа на изразът трябва да е Boolean");
+                if (!CheckSpecialSymbol(")")) Error("Очаквам специален символ ')'");
 
+                // Emit
+                Label labelElse = emit.GetLabel();
+                emit.AddCondBranch(labelElse);
+
+                if (!IsStatement()) Error("Очаквам Statement");
+                if (CheckKeyword("else"))
+                {
+                    // Emit
+                    Label labelEnd = emit.GetLabel();
+                    emit.AddBranch(labelEnd);
+                    emit.MarkLabel(labelElse);
+
+                    if (!IsStatement()) Error("Очаквам Statement");
+
+                    // Emit
+                    emit.MarkLabel(labelEnd);
+                }
+                else if (IsInfiniteStatement())
+                {
+                    // no op
+                }
+                else
+                {
+                    // Emit
+                    emit.MarkLabel(labelElse);
+                }
+
+            }
+            if (CheckKeyword("while"))
+            {
+                // 'while' '(' Expression ')' Statement
+
+                // Emit
+                Label labelContinue = emit.GetLabel();
+                Label labelBreak = emit.GetLabel();
+                breakStack.Push(labelBreak);
+                continueStack.Push(labelContinue);
+
+                emit.MarkLabel(labelContinue);
+
+                if (!CheckSpecialSymbol("(")) Error("Очаквам специален символ '('");
+                if (!IsExpression(null, out type)) Error("Очаквам израз");
+                if (!AssignableTypes(typeof(System.Boolean), type)) Error("Типа на изразът трябва да е Boolean");
+                if (!CheckSpecialSymbol(")")) Error("Очаквам специален символ ')'");
+
+                // Emit
+                emit.AddCondBranch(labelBreak);
+
+                if (!IsStatement()) Error("Очаквам Statement");
+
+                // Emit
+                emit.AddBranch(labelContinue);
+                emit.MarkLabel(labelBreak);
+
+                breakStack.Pop();
+                continueStack.Pop();
+
+            }
+            if (CheckKeyword("return"))
+            {
+                Type retType = emit.GetMethodReturnType();
+                if (retType != typeof(void))
+                {
+                    IsExpression(null, out type);
+                    if (!AssignableTypes(retType, type)) Error("Типа на резултата трябва да е съвместим с типа на метода");
+                }
+                if (!CheckSpecialSymbol(";")) Error("Очаквам специален символ ';'");
+
+                // Emit
+                emit.AddReturn();
+
+            }
+            if (CheckKeyword("break"))
+            {
+                if (!CheckSpecialSymbol(";")) Error("Очаквам специален символ ';'");
+
+                // Emit
+                emit.AddBranch((Label)breakStack.Peek());
+
+            }
+            if (CheckKeyword("continue"))
+            {
+                if (!CheckSpecialSymbol(";")) Error("Очаквам специален символ ';'");
+
+                // Emit
+                emit.AddBranch((Label)continueStack.Peek());
+
+            }
             if (CheckKeyword("printf"))
             {
                 if (!CheckSpecialSymbol("("))
@@ -618,6 +893,38 @@ namespace SimpleCCompiler
             return true;
         }
 
+        public bool IsInfiniteStatement()  // InfiniteStatement = 'infinite' Statement 'infinite'
+        {
+            if (CheckKeyword("infinite"))
+            {
+                if (IsStatement())
+                {
+                    if (CheckKeyword("infinite"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Error($"Expecting 'infinite' after the statement");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Error("Expecting 'infinite' before statement");
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+
+        public bool AssignableTypes(Type typeAssignTo, Type typeAssignFrom)
+        {
+            //return typeAssignTo==typeAssignFrom;
+            return typeAssignTo.IsAssignableFrom(typeAssignFrom);
+        }
         public class LocationInfo
         {
             public TableSymbol id;

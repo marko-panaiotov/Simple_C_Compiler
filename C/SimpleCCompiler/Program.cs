@@ -15,11 +15,10 @@ namespace SimpleCCompiler
 				references.Add(args[i].Substring(3));
 				i++;
 			}
-
             if (i >= args.Length)
             {
                 Console.WriteLine("Syntax: SimpleCCompiler {/r:filename} <source file> [<result exe file>]");
-                Console.WriteLine("Example: SimpleCCompiler /r:System.dll /r:System.Xml.dll examle.sc example.exe");
+                Console.WriteLine("Example: SimpleCCompiler /r:System.dll /r:System.Xml.dll example.sc example.exe");
                 Console.WriteLine("Warning!!! If you run the program from IDE then set params from a project properties.");
                 Console.Read();
 

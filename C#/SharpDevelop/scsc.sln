@@ -1,7 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-# SharpDevelop 3.2.1.6466
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scsc", "scsc.csproj", "{BBBDC327-6EA3-4178-9A06-0413CAD18DBD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scsc.Tests", "..\scsc.Tests\scsc.Tests.csproj", "{EEDE3BBA-1814-4D66-9AEE-05EC86514803}"
@@ -20,6 +21,12 @@ Global
 		{EEDE3BBA-1814-4D66-9AEE-05EC86514803}.Debug|Any CPU.Build.0 = Debug|x86
 		{EEDE3BBA-1814-4D66-9AEE-05EC86514803}.Release|Any CPU.ActiveCfg = Release|x86
 		{EEDE3BBA-1814-4D66-9AEE-05EC86514803}.Release|Any CPU.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D60B3DB-0FD1-432F-82A4-09DD08D64CED}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = scsc.csproj

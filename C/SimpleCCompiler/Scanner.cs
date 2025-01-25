@@ -14,11 +14,11 @@ namespace SimpleCCompiler
 		const char Escape = '\\';
 		
         static readonly string keywords =
-            " scanf printf if else while break continue return typedef static void char bool short int long double signed unsigned struct union enum case default switch do for ";
+            " class scanf printf if else while break continue return typedef static void char bool short int long double signed unsigned struct union enum case default switch do for infinite ";
         static readonly string specialSymbols1 =
-            "%()*,;[]{}~:.";
+            "%()*,;[]~:.";
     	static readonly string specialSymbols2 =
-    		"!&|+-<=>/^?";
+            "!&|+-<=>/^?{}";
     	static readonly string specialSymbols2Pairs =
     		" != && || ++ -- <= == >= += -= *= /= %= <<= >>= &= ^= |= << >> ->";
     	
@@ -72,134 +72,186 @@ namespace SimpleCCompiler
 				default:  return c;
 			}
 		}
-		
-		public Token Next()
-		{
-			int start_column;
-			int start_line;
-			while (true) {
-				start_column = column;
-				start_line = line;
-				if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '.') {
-					StringBuilder s = new StringBuilder();
-					while (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '.' || ch >= '0' && ch <= '9') {
-						s.Append(ch);
-						ReadNextChar();
-					}
-					string id = s.ToString();
-  					if (id.Equals("false") || id.Equals("true") ) {
-						return new BooleanToken(start_line, start_column, id.Equals("true"));
-					} else if (keywords.Contains(" "+id+" ")) {
-						return new KeywordToken(start_line, start_column, id);
-					}
-					return new IdentToken(start_line, start_column, id);
-				} else if (ch >= '0' && ch <= '9') {
-					StringBuilder s = new StringBuilder();
-					while (ch >= '0' && ch <= '9') {
-						s.Append(ch);
-						ReadNextChar();
-					}
-					if (ch=='.') {
-						s.Append(ch);
-						ReadNextChar();
-						while (ch >= '0' && ch <= '9') {
-							s.Append(ch);
-							ReadNextChar();
-						}
-						return new DoubleToken(start_line, start_column, Convert.ToDouble(s.ToString(), System.Globalization.NumberFormatInfo.InvariantInfo));
-					}
-					return new NumberToken(start_line, start_column, Convert.ToInt64(s.ToString()));
-				} else if (ch == '\'') {
-					ReadNextChar();
-					char ch1 = ch;
-					if (ch == Escape) {
-						ReadNextChar();
-						ch1 = UnEscape(ch);
-					}
-					ReadNextChar();
-					if (ch == '\'') ReadNextChar();
-					return new CharToken(start_line, start_column, ch1);
-				} else if (ch == '"') {
-					StringBuilder s = new StringBuilder();
-					ReadNextChar();
-					while (ch != '"' && ch != EOF) {
-						char ch1 = ch;
-						if (ch == Escape) {
-							ReadNextChar();
-							ch1 = UnEscape(ch);
-						}
-						s.Append(ch1);
-						ReadNextChar();
-					}
-					ReadNextChar();
-					return new StringToken(start_line, start_column, s.ToString());
-				} else if (specialSymbols1.Contains(ch.ToString())) {
-					char ch1 = ch;
-					ReadNextChar();
-					return new SpecialSymbolToken(start_line, start_column, ch1.ToString());
-				} else if (specialSymbols2.Contains(ch.ToString())) {
-					char ch1 = ch;
-					ReadNextChar();
-					char ch2 = ch;
-					if (specialSymbols2Pairs.Contains(" "+ch1+ch2+" ")) {
-						ReadNextChar();
-						return new SpecialSymbolToken(start_line, start_column, ch1.ToString()+ch2);
-					}
-					return new SpecialSymbolToken(start_line, start_column, ch1.ToString());
-				} else if (ch==' ' || ch=='\t' || ch == CR || ch == LF) {
-					ReadNextChar();
-					continue;
-				} else if (ch == '/') {
-					char ch1 = ch;
-					ReadNextChar();
-					if (ch == '/') {
-						if (skipComments) {
-							while (ch != CR && ch != LF && ch != EOF) {
-								ReadNextChar();
-							}
-							ReadNextChar();
-						} else {
-							StringBuilder s = new StringBuilder();
-							while (ch != CR && ch != LF && ch != EOF) {
-								ReadNextChar();
-								s.Append(ch);
-							}
-							ReadNextChar();
-							return new CommentToken(start_line, start_column, s.ToString(), true);
-						}
-					} else if (ch == '*') {
-						if (skipComments) {
-							ReadNextChar();
-							do {
-								while (ch != '*' && ch != EOF) {
-									ReadNextChar();
-								}
-								ReadNextChar();
-							} while (ch != '/' && ch != EOF);
-							ReadNextChar();
-						} else {
-							StringBuilder s = new StringBuilder();
-							ReadNextChar();
-							do {
-								while (ch != '*' && ch != EOF) {
-									s.Append(ch);
-									ReadNextChar();
-								}
-								ReadNextChar();
-							} while (ch != '/' && ch != EOF);
-							ReadNextChar();
-							return new CommentToken(start_line, start_column, s.ToString(), false);
-						}
-					} else return new SpecialSymbolToken(start_line, start_column, ch1.ToString());
-					continue;
-				} else if (ch == EOF) {
-					return new EOFToken(start_line, start_column);
-				} else {
-					string s = ch.ToString();
-					ReadNextChar();
-					return new OtherToken(start_line, start_column, s);
-				}
-			}
-		}
-	}
+
+        public Token Next()
+        {
+            int start_column;
+            int start_line;
+            while (true)
+            {
+                start_column = column;
+                start_line = line;
+                if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '.')
+                {
+                    StringBuilder s = new StringBuilder();
+                    while (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch == '.' || ch >= '0' && ch <= '9')
+                    {
+                        s.Append(ch);
+                        ReadNextChar();
+                    }
+                    string id = s.ToString();
+                    if (id.Equals("false") || id.Equals("true"))
+                    {
+                        return new BooleanToken(start_line, start_column, id.Equals("true"));
+                    }
+                    else if (keywords.Contains(" " + id + " "))
+                    {
+                        return new KeywordToken(start_line, start_column, id);
+                    }
+                    else if (id.Equals("infinite")) // InfiniteLoopStatement = 'infinite' Statement 'infinite'
+                    {
+                         return new KeywordToken(start_line, start_column, id);
+                    }
+                    return new IdentToken(start_line, start_column, id);
+                }
+                else if (ch >= '0' && ch <= '9')
+                {
+                    StringBuilder s = new StringBuilder();
+                    while (ch >= '0' && ch <= '9')
+                    {
+                        s.Append(ch);
+                        ReadNextChar();
+                    }
+                    if (ch == '.')
+                    {
+                        s.Append(ch);
+                        ReadNextChar();
+                        while (ch >= '0' && ch <= '9')
+                        {
+                            s.Append(ch);
+                            ReadNextChar();
+                        }
+                        return new DoubleToken(start_line, start_column, Convert.ToDouble(s.ToString(), System.Globalization.NumberFormatInfo.InvariantInfo));
+                    }
+                    return new NumberToken(start_line, start_column, Convert.ToInt64(s.ToString()));
+                }
+                else if (ch == '\'')
+                {
+                    ReadNextChar();
+                    char ch1 = ch;
+                    if (ch == Escape)
+                    {
+                        ReadNextChar();
+                        ch1 = UnEscape(ch);
+                    }
+                    ReadNextChar();
+                    if (ch == '\'') ReadNextChar();
+                    return new CharToken(start_line, start_column, ch1);
+                }
+                else if (ch == '"')
+                {
+                    StringBuilder s = new StringBuilder();
+                    ReadNextChar();
+                    while (ch != '"' && ch != EOF)
+                    {
+                        char ch1 = ch;
+                        if (ch == Escape)
+                        {
+                            ReadNextChar();
+                            ch1 = UnEscape(ch);
+                        }
+                        s.Append(ch1);
+                        ReadNextChar();
+                    }
+                    ReadNextChar();
+                    return new StringToken(start_line, start_column, s.ToString());
+                }
+                else if (specialSymbols1.Contains(ch.ToString()))
+                {
+                    char ch1 = ch;
+                    ReadNextChar();
+                    return new SpecialSymbolToken(start_line, start_column, ch1.ToString());
+                }
+                else if (specialSymbols2.Contains(ch.ToString()))
+                {
+                    char ch1 = ch;
+                    ReadNextChar();
+                    char ch2 = ch;
+                    if (specialSymbols2Pairs.Contains(" " + ch1 + ch2 + " "))
+                    {
+                        ReadNextChar();
+                        return new SpecialSymbolToken(start_line, start_column, ch1.ToString() + ch2);
+                    }
+                    return new SpecialSymbolToken(start_line, start_column, ch1.ToString());
+                }
+                else if (ch == ' ' || ch == '\t' || ch == CR || ch == LF)
+                {
+                    ReadNextChar();
+                    continue;
+                }
+                else if (ch == '/')
+                {
+                    char ch1 = ch;
+                    ReadNextChar();
+                    if (ch == '/')
+                    {
+                        if (skipComments)
+                        {
+                            while (ch != CR && ch != LF && ch != EOF)
+                            {
+                                ReadNextChar();
+                            }
+                            ReadNextChar();
+                        }
+                        else
+                        {
+                            StringBuilder s = new StringBuilder();
+                            while (ch != CR && ch != LF && ch != EOF)
+                            {
+                                ReadNextChar();
+                                s.Append(ch);
+                            }
+                            ReadNextChar();
+                            return new CommentToken(start_line, start_column, s.ToString(), true);
+                        }
+                    }
+                    else if (ch == '*')
+                    {
+                        if (skipComments)
+                        {
+                            ReadNextChar();
+                            do
+                            {
+                                while (ch != '*' && ch != EOF)
+                                {
+                                    ReadNextChar();
+                                }
+                                ReadNextChar();
+                            } while (ch != '/' && ch != EOF);
+                            ReadNextChar();
+                        }
+                        else
+                        {
+                            StringBuilder s = new StringBuilder();
+                            ReadNextChar();
+                            do
+                            {
+                                while (ch != '*' && ch != EOF)
+                                {
+                                    s.Append(ch);
+                                    ReadNextChar();
+                                }
+                                ReadNextChar();
+                            } while (ch != '/' && ch != EOF);
+                            ReadNextChar();
+                            return new CommentToken(start_line, start_column, s.ToString(), false);
+                        }
+                    }
+                    else return new SpecialSymbolToken(start_line, start_column, ch1.ToString());
+                    continue;
+                }
+                else if (ch == EOF)
+                {
+                    return new EOFToken(start_line, start_column);
+                }
+                else
+                {
+                    string s = ch.ToString();
+                    ReadNextChar();
+                    return new OtherToken(start_line, start_column, s);
+                }
+            }
+        }
+
+    }
 }

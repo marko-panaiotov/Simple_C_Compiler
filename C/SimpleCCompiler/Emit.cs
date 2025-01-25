@@ -263,8 +263,12 @@ namespace SimpleCCompiler
 					assembly.SetEntryPoint(method);
 				}
 			}
-			
-			return method;
+            else if (methodName.ToLower() == "infinite") // InfiniteLoopStatement = 'infinite' Statement 'infinite'
+            {
+                isMain = false;
+            }
+
+            return method;
 		}
 		
 		public Type GetMethodReturnType()
@@ -295,7 +299,8 @@ namespace SimpleCCompiler
 		public LocalBuilder AddLocalVar(string localVarName, Type localVarType)
 		{
 			LocalBuilder result = il.DeclareLocal(localVarType);
-			if (CanInitializeLocation(localVarType)) {
+			if (CanInitializeLocation(localVarType))
+			{
 				// Store the already prepared initializer
 				il.Emit(OpCodes.Stloc, result);
 			}
@@ -589,6 +594,79 @@ namespace SimpleCCompiler
 		{
 			il.Emit(OpCodes.Ldnull);
 		}
-		
-	}
+        public void EmitBuiltInFunctions(string functionName)
+        {
+            switch (functionName.ToLower())
+            {
+                case "abs":
+                    EmitAbs();
+                    break;
+                case "sqr":
+                    EmitSqr();
+                    break;
+                case "odd":
+                    EmitOdd();
+                    break;
+                case "ord":
+                    EmitOrd();
+                    break;
+                case "scanf":
+                    EmitScanf();
+                    break;
+                case "printf":
+                    EmitPrintf();
+                    break;
+                // Add more cases for other functions as needed
+                default:
+                    // Handle the case for an unknown function
+                    break;
+            }
+        }
+        public void EmitAbs()
+        {
+            MethodInfo absMethod = typeof(Math).GetMethod("Abs", new Type[] { typeof(int) });
+
+            // Assuming you have the value on the stack
+            il.Emit(OpCodes.Call, absMethod);
+        }
+
+        public void EmitSqr()
+        {
+            // Assuming you have the value on the stack
+            il.Emit(OpCodes.Dup); // Duplicate the value
+            il.Emit(OpCodes.Mul); // Multiply the value by itself
+        }
+
+        public void EmitOdd()
+        {
+            // Assuming you have an integer value on the stack
+            il.Emit(OpCodes.Ldc_I4_1); // Load 1 onto the stack
+            il.Emit(OpCodes.And); // Perform bitwise AND operation
+        }
+
+        public void EmitOrd()
+        {
+            // Assuming you have a character value on the stack
+            // No additional actions needed for 'Ord' since it returns the Unicode value
+        }
+
+        public void EmitScanf()
+        {
+            // Implementation for scanf depends on your specific requirements
+            // You may need to interact with Console.ReadLine() or similar methods
+            // to get user input
+            // This is a simplified example assuming a single integer input
+            il.Emit(OpCodes.Call, typeof(Console).GetMethod("ReadLine"));
+            il.Emit(OpCodes.Call, typeof(int).GetMethod("Parse"));
+        }
+
+        public void EmitPrintf()
+        {
+            // Implementation for printf depends on your specific requirements
+            // You may need to interact with Console.WriteLine() or similar methods
+            // to display output
+            // This is a simplified example assuming a single string input
+            il.Emit(OpCodes.Call, typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }));
+        }
+    }
 }
